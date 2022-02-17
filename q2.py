@@ -1,6 +1,4 @@
 # Definition for singly-linked list.
-from os import curdir
-from turtle import st
 from typing import List, Optional
 
 
