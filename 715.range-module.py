@@ -24,8 +24,8 @@ class RangeModule:
         if before_index > after_index:
             left = min(left, self.starts[after_index])
             right = max(right, self.ends[before_index - 1])
-        self.starts = [*self.starts[:after_index], left, *self.starts[before_index:]]
-        self.ends = [*self.ends[:after_index], right, *self.ends[before_index:]]
+        self.starts[after_index:before_index] = [left]
+        self.ends[after_index:before_index] = [right]
 
     def queryRange(self, left: int, right: int) -> bool:
         # contained: start_a <= left; right <= end_a
@@ -40,22 +40,17 @@ class RangeModule:
         if before_index > after_index:
             reduced_left = min(left, self.starts[after_index])
             reduced_right = max(right, self.ends[before_index - 1])
-        
-        if left > reduced_left:
-            if right < reduced_right:
-                self.starts = [*self.starts[:after_index], reduced_left, right,         *self.starts[before_index:]]
-                self.ends =   [*self.ends[:after_index],   left,         reduced_right, *self.ends[before_index:]]
-            else:
-                self.starts = [*self.starts[:after_index], reduced_left,                *self.starts[before_index:]]
-                self.ends =   [*self.ends[:after_index],   left,                        *self.ends[before_index:]]
-        elif right < reduced_right:
-            self.starts =     [*self.starts[:after_index],               right,         *self.starts[before_index:]]
-            self.ends =       [*self.ends[:after_index],                 reduced_right, *self.ends[before_index:]]
-        else:
-            self.starts =     [*self.starts[:after_index],                              *self.starts[before_index:]]
-            self.ends =       [*self.ends[:after_index],                                *self.ends[before_index:]]
 
+        inner_start, inner_end = [], []
+        if left > reduced_left:
+            inner_start.append(reduced_left)
+            inner_end.append(left)
+        if right < reduced_right:
+            inner_start.append(right)
+            inner_end.append(reduced_right)
         
+        self.starts[after_index:before_index] = inner_start
+        self.ends[after_index:before_index] = inner_end
 
 # @lc code=end
 
