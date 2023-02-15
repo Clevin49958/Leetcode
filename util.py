@@ -27,11 +27,16 @@ def insert_sort_local(arr: list, map=lambda x:x, start=0, end=None) -> list:
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
-def test_local(func, *params, expand=False) -> None:
+def test_local(func, *params, expand=False, sol=None, pause=None) -> None:
     for idx, s in enumerate(params):
         _logger.info(f"Test case %d: %s", idx + 1, s)
+        if pause is not None and (idx == pause or idx == len(params) + pause):
+            input("Set a breakpoint to debug...")
         res = func(*s) if expand else func(s)
         _logger.info(f"Test obtained: %s", res)
+        if sol:
+            # _logger.info(f"Test result: {res == sol[idx]}")
+            assert res == sol[idx]
         print()
 
 if __name__ == "__main__":
